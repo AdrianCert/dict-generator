@@ -13,7 +13,7 @@ class FrequencyBasedKeyGenerator:
         self.target_count = target_count
         self.counts = {
             key: math.ceil(percentage * target_count)
-            for key, percentage in frequency_schema
+            for key, percentage in frequency_schema.items()
         }
         self.compute_mandatory_counts()
         left_unfilled = self.mandatory_counts
