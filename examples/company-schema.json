@@ -1,0 +1,34 @@
+[
+    {
+        "name": "company",
+        "type": "choice",
+        "values": [
+            "Google",
+            "Microsoft",
+            "IBM",
+            "Mojang",
+            "HexView",
+            "McDonalts",
+            "Apple",
+            "Facebook",
+            "Amazon",
+            "Intel",
+            "Oracle",
+            "EA",
+            "Ubisoft",
+            "Activision",
+            "Sony",
+            "Blizzard"
+        ],
+        "frequency": "100"
+    },
+    {
+        "name": "price",
+        "type": "int",
+        "values": [
+            "50",
+            "999"
+        ],
+        "frequency": "90"
+    }
+]
