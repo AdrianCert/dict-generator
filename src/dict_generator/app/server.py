@@ -1,18 +1,17 @@
-from flask import Flask, render_template, request, Response
-
-import random
 import json
+import random
 
 from dict_generator.generator import (
     FrequencyBasedKeyGenerator,
     SchemaBasedDictGenerator,
 )
+from flask import Flask, Response, render_template, request
 
 app = Flask(__name__)
 
 
 @app.route("/", methods=["GET", "POST"])
-def home():
+def home():  # noqa C901
     if request.method == "POST":
         names = request.form.getlist("name[]")
         types = request.form.getlist("type[]")
@@ -43,7 +42,6 @@ def home():
             key_generator = FrequencyBasedKeyGenerator(int(count), dist_schema)
             dict_generator = SchemaBasedDictGenerator(schema)
             for item in key_generator:
-                # Replace this with your actual data generation logic
                 data = dict_generator.generate(item)
                 yield json.dumps(data) + "\n"
 
@@ -51,7 +49,6 @@ def home():
             key_generator = FrequencyBasedKeyGenerator(int(count), dist_schema)
             dict_generator = SchemaBasedDictGenerator(schema)
             for item in key_generator:
-                # Replace this with your actual data generation logic
                 data = dict_generator.generate(item)
                 result = []
                 for key, value in data.items():
@@ -68,7 +65,6 @@ def home():
             dict_generator = SchemaBasedDictGenerator(schema)
             result = ""
             for item in key_generator:
-                # Replace this with your actual data generation logic
                 data = dict_generator.generate(item)
                 result = result + json.dumps(data) + "\n"
             yield result
@@ -78,7 +74,6 @@ def home():
             dict_generator = SchemaBasedDictGenerator(schema)
             result_ = ""
             for item in key_generator:
-                # Replace this with your actual data generation logic
                 data = dict_generator.generate(item)
                 result = []
                 for key, value in data.items():

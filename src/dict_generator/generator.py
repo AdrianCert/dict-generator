@@ -66,9 +66,8 @@ class FrequencyBasedKeyGenerator:
                 continue
             left_opportunities = self.target_count - self.mandatory_counts.get(key, 0)
 
-            if left_opportunities > count:
-                if random.random() > 0.9:
-                    continue
+            if left_opportunities > count and random.random() > 0.9:  # noqa PLR2004
+                continue
             result.append(key)
             self.counts[key] -= 1
 
@@ -126,7 +125,7 @@ if __name__ == "__main__":
     }
 
     dict_generator = SchemaBasedDictGenerator(schema)
-    generator = FrequencyBasedKeyGenerator(100_000, zip(keys, percentages))
+    generator = FrequencyBasedKeyGenerator(100_000, dict(zip(keys, percentages)))
     start = time.time()
     for dictionary in generator:
         # suppress the output
