@@ -4,6 +4,8 @@ version = "0.1.0"
 description = "generate dict via schema"
 authors = [
     {name = "Panaintescu Adrian Valentin", email = "adrian.cert@gmail.com"},
+    {name = "Neculea Mihaela", email = "mneculea@gmail.com"},
+    {name = "Petrache Liviu Andrei", email = "petrache.andrei1@gmail.com"}
 ]
 dependencies = []
 requires-python = ">=3.11"
@@ -14,6 +16,11 @@ license = {text = "MIT"}
 requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
 
-
 [tool.pdm]
 distribution = true
+
+[tool.ruff.lint]
+extend-select = ["C", "N", "SIM", "PTH", "I", "PL", "FURB"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
