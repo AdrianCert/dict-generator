@@ -100,10 +100,9 @@
             });
         }
 
-        function exportFields() {
+        function collectFields() {
             let schemaFields = document.getElementById('schema-fields');
             let fields = Array.from(schemaFields.children).map(function(fieldDiv) {
-                // Collect the field data...
                 return {
                     name: fieldDiv.querySelector('input[name="name[]"]').value,
                     type: fieldDiv.querySelector('select[name="type[]"]').value,
@@ -111,6 +110,11 @@
                     frequency: fieldDiv.querySelector('input[name="frequency[]"]').value,
                 };
             });
+            return fields;
+        }
+
+        function exportFields() {
+            let fields = collectFields();
             var json = JSON.stringify(fields);
             var blob = new Blob([json], {type: 'application/json'});
             var url = URL.createObjectURL(blob);
@@ -132,6 +136,13 @@
             reader.readAsText(file);
         });
 
+        function restoreFields() {
+            let fields = JSON.parse(localStorage.getItem('fields') || '[]');
+            constructFields(fields);
+            document.querySelector('input[name="count"]').value = localStorage.getItem('count') || 100;
+            document.querySelector('select[name="kind"]').value = localStorage.getItem('kind') || 'pub';
+        }
+
         document.getElementById('add-button').addEventListener('click', function() {
             let schemaFields = document.getElementById('schema-fields');
             let fieldDiv = buildItem();
@@ -146,7 +157,17 @@
             }
         });
 
+        document.getElementById('schema-form').addEventListener('input', function() {
+            let fields = collectFields();
+            let count = document.querySelector('input[name="count"]').value;
+            let kind = document.querySelector('select[name="kind"]').value;
+            localStorage.setItem('fields', JSON.stringify(fields));
+            localStorage.setItem('count', count);
+            localStorage.setItem('kind', kind);
+        });
+
         document.getElementById('export-button').addEventListener('click', exportFields);
+        document.addEventListener('DOMContentLoaded', restoreFields);
     </script>
     </body>
 </html>
