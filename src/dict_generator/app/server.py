@@ -5,7 +5,7 @@ from dict_generator.generator import (
     FrequencyBasedKeyGenerator,
     SchemaBasedDictGenerator,
 )
-from flask import Flask, Response, render_template, request
+from flask import Flask, Response, render_template, request, stream_with_context
 
 app = Flask(__name__)
 
@@ -87,13 +87,42 @@ def home():  # noqa C901
             yield result_
 
         if kind == "pub":
-            return Response(generate(), mimetype="application/json")
+            response = Response(
+                stream_with_context(generate()), mimetype="application/json"
+            )
+            response.headers["Content-Disposition"] = (
+                'attachment; filename="filename.json"'
+            )
+            return response
+
         if kind == "sub":
-            return Response(generate_subscription(), mimetype="application/json")
+            response = Response(
+                stream_with_context(generate_subscription()),
+                mimetype="application/json",
+            )
+            response.headers["Content-Disposition"] = (
+                'attachment; filename="filename.json"'
+            )
+            return response
+
         if kind == "dummy_pub":
-            return Response(dummy_generate(), mimetype="application/json")
+            response = Response(
+                stream_with_context(dummy_generate()), mimetype="application/json"
+            )
+            response.headers["Content-Disposition"] = (
+                'attachment; filename="filename.json"'
+            )
+            return response
+
         if kind == "dummy_sub":
-            return Response(dummy_generate_subscription(), mimetype="application/json")
+            response = Response(
+                stream_with_context(dummy_generate_subscription()),
+                mimetype="application/json",
+            )
+            response.headers["Content-Disposition"] = (
+                'attachment; filename="filename.json"'
+            )
+            return response
 
         return "Invalid kind of data"
     return render_template("index.html")
