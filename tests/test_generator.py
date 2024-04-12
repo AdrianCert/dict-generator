@@ -1,7 +1,7 @@
 import time
 import unittest
 
-from src.dict_generator.generator import (
+from dict_generator.generator import (
     FrequencyBasedKeyGenerator,
     SchemaBasedDictGenerator,
 )

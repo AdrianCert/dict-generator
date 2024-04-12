@@ -31,14 +31,11 @@ class FrequencyBasedKeyGenerator:
         # Assign the mandatory counts for each key in the sorted order
         for key in sorted_keys:
             count = self.counts[key]
-            if left_filling >= count:
-                self.mandatory_counts[key] = count
-                self.counts[key] = 0
-                left_filling -= count
-            else:
-                self.mandatory_counts[key] = left_filling
-                self.counts[key] -= left_filling
-                left_filling -= count
+            use_count = min(left_filling, count)
+            self.mandatory_counts[key] = use_count
+            self.counts[key] -= use_count
+            left_filling -= use_count
+            if left_filling == 0:
                 break
         return left_filling
 
@@ -108,7 +105,7 @@ if __name__ == "__main__":
 
     # Usage
     keys = ["key1", "key2", "key3"]
-    percentages = [0.5, 0.5, 0.5]
+    percentages = [0.3, 0.4, 0.3]
     schema = {
         "key1": {
             "type": "int",
@@ -125,11 +122,17 @@ if __name__ == "__main__":
     }
 
     dict_generator = SchemaBasedDictGenerator(schema)
-    generator = FrequencyBasedKeyGenerator(100_000, dict(zip(keys, percentages)))
+    generator = FrequencyBasedKeyGenerator(10000, dict(zip(keys, percentages)))
     start = time.time()
     for dictionary in generator:
         # suppress the output
         # print(dict_generator.generate(dictionary))
         _ = dict_generator.generate(dictionary)
 
+    print(time.time() - start)
+    import concurrent.futures
+    start = time.time()
+    generator = FrequencyBasedKeyGenerator(10000, dict(zip(keys, percentages)))
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+        results = list(executor.map(dict_generator.generate, generator))
     print(time.time() - start)
